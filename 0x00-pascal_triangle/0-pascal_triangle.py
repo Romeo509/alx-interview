@@ -1,14 +1,26 @@
 #!/usr/bin/python3
 """
 0-pascal_triangle
+  - Implements the Pascal's Triangle algorithm.
+  - Takes an integer 'n' as input.
+  - Returns a list of lists representing the first 'n' rows of Pascal's Triangle.
+  - Returns an empty list if 'n' is less than or equal to zero.
+
+  This function utilizes dynamic programming to efficiently calculate each row
+  based on the previous row's values.
 """
 
 
 def pascal_triangle(n):
     """
-    Returns a list of integers
-    representing the Pascal Triangle of n
-    returns empty list if n <= 0
+     Calculates and returns the first 'n' rows of Pascal's Triangle.
+
+    Args:
+        n (int): The number of rows to generate in the Pascal's Triangle.
+
+    Returns:
+        list: A list of lists representing the first 'n' rows of Pascal's Triangle.
+              An empty list is returned if 'n' is less than or equal to zero.
     """
     p = []
     if n <= 0:
