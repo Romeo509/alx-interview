@@ -1,24 +1,31 @@
 #!/usr/bin/python3
+"""
+This module contains the canUnlockAll function.
+"""
+
 
 def canUnlockAll(boxes):
-    # Set to keep track of keys
-    keys = set([0])  # Start with the keys in the first box
+    """
+    Determines if all boxes can be opened.
 
-    # Queue to perform BFS
-    queue = [0]  # Start with the first box
+    Parameters:
+    boxes (list of list of int): A list of
+    boxes where each box contains a list of keys.
+
+    Returns:
+    bool: True if all boxes can be opened, False otherwise.
+    """
+    keys = set([0])
+    queue = [0]
 
     while queue:
-        current_box = queue.pop(0)  # Get the first box from the queue
+        current_box = queue.pop(0)
 
-        # Check each key in the current box
         for key in boxes[current_box]:
-            # If the key opens a box that hasn't been visited yet
             if key not in keys and key < len(boxes):
-                keys.add(key)  # Add the key to the set of keys
+                keys.add(key)
                 queue.append(key)
 
-        # Mark the current box as visited
         boxes[current_box] = []
 
-    # If all boxes have been visited, return True
     return len(keys) == len(boxes)
