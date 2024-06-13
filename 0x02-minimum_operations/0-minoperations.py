@@ -8,6 +8,7 @@ result in exactly n H characters in the file.
 Author: Your Name
 """
 
+
 def minOperations(n):
     """
     Calculate the minimum number of operations required to
@@ -17,7 +18,8 @@ def minOperations(n):
     n (int): The number of H characters desired.
 
     Returns:
-    int: The minimum number of operations required, or 0 if n is impossible to achieve.
+    int: The minimum number of operations required, or 0 if n is
+    impossible to achieve.
     """
     if n <= 1:
         return 0
