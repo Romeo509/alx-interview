@@ -1,68 +1,40 @@
 #!/usr/bin/python3
+"""Module containing script that reads stdin and computes metrics"""
 import sys
-from collections import defaultdict
 
+status_codes = {"200": 0, "301": 0, "400": 0, "401": 0,
+                "403": 0, "404": 0, "405": 0, "500": 0}
+total_size = 0
+total_num = 0
 
-def parse_line(line):
-    """Documentation"""
-    parts = line.split()
-    if len(parts) < 7:
-        return None
+try:
+    for line in sys.stdin:
+        lines = line.split(" ")
 
-    ip_address = parts[0]
-    status_code = parts[-2]
-    file_size = int(parts[-1])
+        if len(lines) > 4:
+            code = lines[-2]
+            size = int(lines[-1])
 
-    try:
-        status_code_int = int(status_code)
-    except ValueError:
-        return None
+            if code in status_codes.keys():
+                status_codes[code] += 1
 
-    allowed_status_codes = {'200', '301', '400', '401',
-                            '403', '404', '405', '500'}
-    if status_code not in allowed_status_codes:
-        return None
+            total_size += size
+            total_num += 1
 
-    return (status_code, file_size)
+        if total_num == 10:
+            total_num = 0
+            print("File size: {}".format(total_size))
 
+            for k, v in sorted(status_codes.items()):
+                if v != 0:
+                    print("{}: {}".format(k, v))
 
-def print_statistics(total_size, status_counts):
-    """Documentation"""
-    print(f"File size: {total_size}")
+except Exception:
+    pass
 
-    for code in sorted(status_counts.keys()):
-        """Documentation"""
-        print(f"{code}: {status_counts[code]}")
+finally:
+    print("File size: {}".format(total_size))
 
-
-def main():
-    """Documentation"""
-    total_size = 0
-    status_counts = defaultdict(int)
-    line_count = 0
-
-    try:
-        for line in sys.stdin:
-            """Documentation"""
-            line_count += 1
-            line = line.strip()
-            parsed = parse_line(line)
-
-            if parsed:
-                """Documentation"""
-                status_code, file_size = parsed
-                total_size += file_size
-                status_counts[status_code] += 1
-
-            if line_count % 10 == 0:
-                """Documentation"""
-                print_statistics(total_size, status_counts)
-
-    except KeyboardInterrupt:
-        """Documentation"""
-        print_statistics(total_size, status_counts)
-        sys.exit(0)
-
-
-if __name__ == "__main__":
-    main()
+    for k, v in sorted(status_codes.items()):
+        if v != 0:
+            print("{}: {}".format(k, v))
