@@ -4,6 +4,7 @@ from collections import defaultdict
 
 
 def parse_line(line):
+    """Documentation"""
     parts = line.split()
     if len(parts) < 7:
         return None
@@ -26,32 +27,39 @@ def parse_line(line):
 
 
 def print_statistics(total_size, status_counts):
+    """Documentation"""
     print(f"File size: {total_size}")
 
     for code in sorted(status_counts.keys()):
+        """Documentation"""
         print(f"{code}: {status_counts[code]}")
 
 
 def main():
+    """Documentation"""
     total_size = 0
     status_counts = defaultdict(int)
     line_count = 0
 
     try:
         for line in sys.stdin:
+            """Documentation"""
             line_count += 1
             line = line.strip()
             parsed = parse_line(line)
 
             if parsed:
+                """Documentation"""
                 status_code, file_size = parsed
                 total_size += file_size
                 status_counts[status_code] += 1
 
             if line_count % 10 == 0:
+                """Documentation"""
                 print_statistics(total_size, status_counts)
 
     except KeyboardInterrupt:
+        """Documentation"""
         print_statistics(total_size, status_counts)
         sys.exit(0)
 
