@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""Module containing script that reads stdin and computes metrics"""
+"""Module for parsing and computing metrics from HTTP request logs."""
 import sys
 
 
