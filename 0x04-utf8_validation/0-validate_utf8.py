@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""UTF-8 Validation"""
+"""Solving a UTF-8 Validation interview question"""
 
 
 def get_leading_set_bits(num):
