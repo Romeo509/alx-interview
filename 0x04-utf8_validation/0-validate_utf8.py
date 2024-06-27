@@ -1,50 +1,34 @@
 #!/usr/bin/python3
-"""
-UTF-8 Validation
-"""
+"""UTF-8 Validation"""
+
+
+def get_leading_set_bits(num):
+    """Returns the number of leading set bits (1)"""
+    set_bits = 0
+    helper = 1 << 7
+    while helper & num:
+        set_bits += 1
+        helper = helper >> 1
+    return set_bits
 
 
 def validUTF8(data):
-    """
-    Determine if a given dataset represents a valid UTF-8 encoding.
+    """Determines if a given dataset represents a valid UTF-8 encoding"""
+    bits_count = 0
 
-    :param data: List of integers representing 1 byte of data each
-    :return: True if data is a valid UTF-8 encoding, False otherwise
-    """
-    num_follows = 0
+    for i in range(len(data)):
+        if bits_count == 0:
+            bits_count = get_leading_set_bits(data[i])
 
-    mask1 = 1 << 7
-    mask2 = 1 << 6
-
-    for num in data:
-        mask = 1 << 7
-
-        """
-        Determine number of following bytes
-        """
-        if num_follows == 0:
-            while mask & num:
-                num_follows += 1
-                mask = mask >> 1
-
-            """
-            Handle 1-byte characters (0xxxxxxx)
-            """
-            if num_follows == 0:
+            if bits_count == 0:
                 continue
 
-            """
-            Handle multi-byte characters
-            """
-            if num_follows == 1 or num_follows > 4:
+            if bits_count == 1 or bits_count > 4:
                 return False
         else:
-            """
-            Check if current byte is a continuation byte (10xxxxxx)
-            """
-            if not (num & mask1 and not (num & mask2)):
+            if not (data[i] & (1 << 7) and not (data[i] & (1 << 6))):
                 return False
 
-            num_follows -= 1
+        bits_count -= 1
 
-    return num_follows == 0
+    return bits_count == 0
