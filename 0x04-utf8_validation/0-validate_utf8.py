@@ -2,21 +2,23 @@
 """
 UTF-8 Validation
 """
+
+
 def validUTF8(data):
     """
     Determine if a given dataset represents a valid UTF-8 encoding.
-    
+
     :param data: List of integers representing 1 byte of data each
     :return: True if data is a valid UTF-8 encoding, False otherwise
     """
     num_follows = 0
 
-    mask1 = 1 << 7  # 10000000
-    mask2 = 1 << 6  # 01000000
-    
+    mask1 = 1 << 7
+    mask2 = 1 << 6
+
     for num in data:
         mask = 1 << 7
-        
+
         """
         Determine number of following bytes
         """
@@ -24,13 +26,13 @@ def validUTF8(data):
             while mask & num:
                 num_follows += 1
                 mask = mask >> 1
-            
+
             """
             Handle 1-byte characters (0xxxxxxx)
             """
             if num_follows == 0:
                 continue
-            
+
             """
             Handle multi-byte characters
             """
@@ -42,7 +44,7 @@ def validUTF8(data):
             """
             if not (num & mask1 and not (num & mask2)):
                 return False
-            
+
             num_follows -= 1
-    
+
     return num_follows == 0
