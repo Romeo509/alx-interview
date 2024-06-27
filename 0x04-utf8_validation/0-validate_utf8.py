@@ -3,7 +3,7 @@
 
 
 def get_leading_set_bits(num):
-    """Returns the number of leading set bits (1)"""
+    """Counts the number of leading set bits (1) in a given byte."""
     helper = 1 << 7
     set_bits = 0
     while helper & num:
@@ -13,7 +13,7 @@ def get_leading_set_bits(num):
 
 
 def validUTF8(data):
-    """Determines if a given dataset represents a valid UTF-8 encoding"""
+    """Checks if a dataset conforms to UTF-8 encoding standards."""
     bits_count = 0
 
     for i in range(len(data)):
