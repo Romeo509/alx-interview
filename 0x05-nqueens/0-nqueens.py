@@ -2,8 +2,10 @@
 """
 N-Queens Problem Solver
 
-This program solves the N-Queens problem, which involves placing N queens on an NxN chessboard
-such that no two queens threaten each other. It uses a recursive backtracking approach to find
+This program solves the N-Queens problem, which
+involves placing N queens on an NxN chessboard
+such that no two queens threaten each other. It uses
+a recursive backtracking approach to find
 all possible solutions.
 
 Usage:
@@ -35,7 +37,9 @@ def is_valid_queen_placement(current_board: list) -> bool:
     return True
 
 
-def solve_nqueens(board_size: int, current_row: int, current_board: list, solutions: list):
+def solve_nqueens(
+    board_size: int, current_row: int, current_board: list, solutions: list
+):
     """ Recursively solve the N-Queens problem """
     if current_row == board_size:
         print(solutions)
@@ -44,7 +48,9 @@ def solve_nqueens(board_size: int, current_row: int, current_board: list, soluti
             current_board.append(column)
             solutions.append([current_row, column])
             if is_valid_queen_placement(current_board):
-                solve_nqueens(board_size, current_row + 1, current_board, solutions)
+                solve_nqueens(
+                    board_size, current_row + 1, current_board, solutions
+                )
             current_board.pop()
             solutions.pop()
 
