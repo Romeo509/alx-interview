@@ -8,56 +8,41 @@ def is_safe(board, row, col):
 
     # Check column
     for i in range(row):
-        if board[i][col] == 1:
+        if board[i] == col:
             return False
 
-    # Check upper diagonal on left side
-    for i, j in zip(range(row, -1, -1), range(col, -1, -1)):
-        if board[i][j] == 1:
+        # Check upper diagonal on left side
+        if board[i] - i == col - row:
             return False
 
-    # Check upper diagonal on right side
-    for i, j in zip(range(row, -1, -1), range(col, len(board))):
-        if board[i][j] == 1:
+        # Check upper diagonal on right side
+        if board[i] + i == col + row:
             return False
 
     return True
 
 
-def solve_nqueens(board, row):
+def solve_nqueens(n):
     """ Recursive function to solve N queens problem """
 
-    # Base case: If all queens are placed, return true
-    if row >= len(board):
-        return True
+    board = [-1] * n
+    solutions = []
 
-    for col in range(len(board)):
-        if is_safe(board, row, col):
-            board[row][col] = 1
-            if solve_nqueens(board, row + 1):
-                return True
-            board[row][col] = 0
+    def backtrack(row):
+        """ Backtracking function """
 
-    return False
+        if row == n:
+            solutions.append(board[:])
+            return
 
+        for col in range(n):
+            if is_safe(board, row, col):
+                board[row] = col
+                backtrack(row + 1)
+                board[row] = -1
 
-def nqueens(n):
-    """ Function to solve the N queens problem """
-
-    # Initialize an empty board
-    board = [[0 for _ in range(n)] for _ in range(n)]
-
-    if not solve_nqueens(board, 0):
-        return []
-
-    # Convert board format from 1s and 0s to list of positions
-    result = []
-    for i in range(n):
-        for j in range(n):
-            if board[i][j] == 1:
-                result.append([i, j])
-
-    return result
+    backtrack(0)
+    return solutions
 
 
 if __name__ == "__main__":
@@ -73,6 +58,6 @@ if __name__ == "__main__":
         print(f"Error: {e}")
         sys.exit(1)
 
-    solutions = nqueens(n)
+    solutions = solve_nqueens(n)
     for solution in solutions:
-        print(solution)
+        print([[i, solution[i]] for i in range(n)])
