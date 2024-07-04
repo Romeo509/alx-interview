@@ -1,80 +1,78 @@
 #!/usr/bin/env python3
-"""
-N queens puzzle solution using backtracking.
-"""
 
 import sys
 
 
-def solve_nqueens(N):
-    """
-    Solve the N queens puzzle using backtracking.
+def is_safe(board, row, col):
+    """ Check if it's safe to place a queen at board[row][col] """
 
-    Args:
-        N (int): The size of the chessboard and number of queens.
+    # Check column
+    for i in range(row):
+        if board[i][col] == 1:
+            return False
 
-    Returns:
-        list: A list of solutions, where each solution is
-        represented as a list of [row, col] indices.
-    """
-    def is_safe(row, col):
-        """ Check if it's safe to place a queen at board[row][col] """
-        return not (cols[col] or diags1[row - col] or diags2[row + col])
+    # Check upper diagonal on left side
+    for i, j in zip(range(row, -1, -1), range(col, -1, -1)):
+        if board[i][j] == 1:
+            return False
 
-    def place_queen(row, col):
-        """ Place a queen at board[row][col] """
-        board[row] = col
-        cols[col] = True
-        diags1[row - col] = True
-        diags2[row + col] = True
+    # Check upper diagonal on right side
+    for i, j in zip(range(row, -1, -1), range(col, len(board))):
+        if board[i][j] == 1:
+            return False
 
-    def remove_queen(row, col):
-        """ Remove a queen from board[row][col] """
-        board[row] = -1
-        cols[col] = False
-        diags1[row - col] = False
-        diags2[row + col] = False
+    return True
 
-    def backtrack(row=0):
-        """ Backtracking function to find all solutions """
-        nonlocal solutions
-        if row == N:
-            solutions.append([(r, board[r]) for r in range(N)])
-            return
-        for col in range(N):
-            if is_safe(row, col):
-                place_queen(row, col)
-                backtrack(row + 1)
-                remove_queen(row, col)
 
-    solutions = []
-    board = [-1] * N  # board[row] = col means there is a queen at (row, col)
-    cols = [False] * N  # columns attacked by previous queens
-    diags1 = [False] * (2 * N - 1)  # diagonal 1 (top-left to bottom-right)
-    diags2 = [False] * (2 * N - 1)  # diagonal 2 (top-right to bottom-left)
+def solve_nqueens(board, row):
+    """ Recursive function to solve N queens problem """
 
-    backtrack()
-    return solutions
+    # Base case: If all queens are placed, return true
+    if row >= len(board):
+        return True
+
+    for col in range(len(board)):
+        if is_safe(board, row, col):
+            board[row][col] = 1
+            if solve_nqueens(board, row + 1):
+                return True
+            board[row][col] = 0
+
+    return False
+
+
+def nqueens(n):
+    """ Function to solve the N queens problem """
+
+    # Initialize an empty board
+    board = [[0 for _ in range(n)] for _ in range(n)]
+
+    if not solve_nqueens(board, 0):
+        return []
+
+    # Convert board format from 1s and 0s to list of positions
+    result = []
+    for i in range(n):
+        for j in range(n):
+            if board[i][j] == 1:
+                result.append([i, j])
+
+    return result
 
 
 if __name__ == "__main__":
-    # Validate input
     if len(sys.argv) != 2:
-        print(f"Usage: {sys.argv[0]} N")
+        print(f"Usage: {sys.argv[0]} <n>")
         sys.exit(1)
 
     try:
-        N = int(sys.argv[1])
-        if N < 4:
-            print("N must be at least 4")
-            sys.exit(1)
-    except ValueError:
-        print("N must be a number")
+        n = int(sys.argv[1])
+        if n < 1:
+            raise ValueError("N must be a positive integer")
+    except ValueError as e:
+        print(f"Error: {e}")
         sys.exit(1)
 
-    # Solve N queens problem
-    solutions = solve_nqueens(N)
-
-    # Print solutions
+    solutions = nqueens(n)
     for solution in solutions:
         print(solution)
