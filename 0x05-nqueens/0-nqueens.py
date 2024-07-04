@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
 
 import sys
 
@@ -47,7 +47,7 @@ def solve_nqueens(n):
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print(f"Usage: {sys.argv[0]} <n>")
+        print("Usage: ./0-nqueens.py N")
         sys.exit(1)
 
     try:
