@@ -1,59 +1,68 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
+"""
+N queens puzzle solution using backtracking.
+"""
+
 import sys
 
-def is_safe(board, row, col):
-    """ Check if it's safe to place a queen at board[row][col] """
-    # Check this row on left side
-    for i in range(col):
-        if board[row][i] == 1:
-            return False
-    
-    # Check upper diagonal on left side
-    for i, j in zip(range(row, -1, -1), range(col, -1, -1)):
-        if board[i][j] == 1:
-            return False
-    
-    # Check lower diagonal on left side
-    for i, j in zip(range(row, len(board), 1), range(col, -1, -1)):
-        if board[i][j] == 1:
-            return False
-    
-    return True
 
-def solve_nqueens(board, col, N, solutions):
-    """ Recursive function to solve N Queens problem """
-    if col >= N:
-        # Base case: If all queens are placed, add current solution to solutions
-        solution = []
-        for i in range(N):
-            for j in range(N):
-                if board[i][j] == 1:
-                    solution.append([i, j])
-        solutions.append(solution)
-        return True
-    
-    # Try placing queen in each row of current column
-    for i in range(N):
-        if is_safe(board, i, col):
-            board[i][col] = 1  # Place queen
-            solve_nqueens(board, col + 1, N, solutions)  # Recur to place rest of queens
-            
-            # Backtrack: If placing queen doesn't lead to a solution, remove it
-            board[i][col] = 0
-    
-    return False
+def solve_nqueens(N):
+    """
+    Solve the N queens puzzle using backtracking.
 
-def print_solutions(solutions):
-    """ Print all solutions """
-    for solution in solutions:
-        print(solution)
+    Args:
+        N (int): The size of the chessboard and number of queens.
+
+    Returns:
+        list: A list of solutions, where each solution is
+        represented as a list of [row, col] indices.
+    """
+    def is_safe(row, col):
+        """ Check if it's safe to place a queen at board[row][col] """
+        return not (cols[col] or diags1[row - col] or diags2[row + col])
+
+    def place_queen(row, col):
+        """ Place a queen at board[row][col] """
+        board[row] = col
+        cols[col] = True
+        diags1[row - col] = True
+        diags2[row + col] = True
+
+    def remove_queen(row, col):
+        """ Remove a queen from board[row][col] """
+        board[row] = -1
+        cols[col] = False
+        diags1[row - col] = False
+        diags2[row + col] = False
+
+    def backtrack(row=0):
+        """ Backtracking function to find all solutions """
+        nonlocal solutions
+        if row == N:
+            solutions.append([(r, board[r]) for r in range(N)])
+            return
+        for col in range(N):
+            if is_safe(row, col):
+                place_queen(row, col)
+                backtrack(row + 1)
+                remove_queen(row, col)
+
+    solutions = []
+    board = [-1] * N  # board[row] = col means there is a queen at (row, col)
+    cols = [False] * N  # columns attacked by previous queens
+    diags1 = [False] * (2 * N - 1)  # diagonal 1 (top-left to bottom-right)
+    diags2 = [False] * (2 * N - 1)  # diagonal 2 (top-right to bottom-left)
+
+    backtrack()
+    return solutions
+
 
 if __name__ == "__main__":
     # Validate input
     if len(sys.argv) != 2:
-        print("Usage: ./0-nqueens.py N")
+        print(f"Usage: {sys.argv[0]} N")
         sys.exit(1)
-    
+
     try:
         N = int(sys.argv[1])
         if N < 4:
@@ -62,13 +71,10 @@ if __name__ == "__main__":
     except ValueError:
         print("N must be a number")
         sys.exit(1)
-    
-    # Initialize the board as an NxN grid with all cells as 0 (empty)
-    board = [[0 for _ in range(N)] for _ in range(N)]
-    solutions = []
-    
-    # Solve the N Queens problem
-    solve_nqueens(board, 0, N, solutions)
-    
-    # Print all solutions
-    print_solutions(solutions)
+
+    # Solve N queens problem
+    solutions = solve_nqueens(N)
+
+    # Print solutions
+    for solution in solutions:
+        print(solution)
