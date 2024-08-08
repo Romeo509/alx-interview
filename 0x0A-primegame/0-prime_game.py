@@ -1,41 +1,29 @@
 #!/usr/bin/python3
-"""
-Prime Game - Who is the winner?
-"""
+"""Prime Game - Determine the winner of a prime number removal game."""
+
 
 def isWinner(x, nums):
-    """
-    Determine the winner of a set of prime number removal games.
-
-    Args:
-        x (int): Number of rounds.
-        nums (list of int): List of integers where each integer n denotes
-        a set of consecutive integers starting from 1 up to and including n.
-
-    Returns:
-        str: The name of the player who won the most rounds ("Ben" or "Maria").
-        None: If the winner cannot be determined.
-    """
+    """Determine who wins the most rounds."""
     if x <= 0 or nums is None or x != len(nums):
         return None
 
-    ben_wins = 0
-    maria_wins = 0
+    ben_wins = 0  # Initialize Ben's win counter
+    maria_wins = 0  # Initialize Maria's win counter
 
-    max_num = max(nums)
-    sieve = [1] * (max_num + 1)
-    sieve[0], sieve[1] = 0, 0  # 0 and 1 are not prime numbers
+    max_num = max(nums)  # Find the maximum number in nums
 
-    # Generate prime numbers using Sieve of Eratosthenes
+    sieve = [1] * (max_num + 1)  # Create a list to mark prime numbers
+
+    sieve[0], sieve[1] = 0, 0  # Mark 0 and 1 as non-prime
+
     for i in range(2, len(sieve)):
-        if sieve[i] == 1:
-            remove_multiples(sieve, i)
+        if sieve[i] == 1:  # If i is a prime number
+            remove_multiples(sieve, i)  # Mark its multiples as non-prime
 
-    # Play each round
     for num in nums:
-        if sum(sieve[:num + 1]) % 2 == 0:
+        if sum(sieve[:num + 1]) % 2 == 0:  # Ben wins if primes are even
             ben_wins += 1
-        else:
+        else:  # Maria wins if primes are odd
             maria_wins += 1
 
     if ben_wins > maria_wins:
@@ -45,19 +33,11 @@ def isWinner(x, nums):
     else:
         return None
 
+
 def remove_multiples(sieve, prime):
-    """
-    Mark multiples of a prime number as non-prime in the sieve.
-
-    Args:
-        sieve (list of int): Array where prime indices are 1 and non-prime indices are 0.
-        prime (int): Prime number to mark multiples of.
-
-    Returns:
-        None.
-    """
+    """Mark multiples of the given prime number as non-prime."""
     for i in range(2, len(sieve)):
         try:
-            sieve[i * prime] = 0
+            sieve[i * prime] = 0  # Set multiples of prime to 0
         except (IndexError, ValueError):
             break
